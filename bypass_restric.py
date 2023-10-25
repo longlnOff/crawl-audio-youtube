@@ -13,11 +13,11 @@ destination = 'data_youtube/mp3_files/'
 
 for playlist_location in files:
 	playlist_obj = Playlist(playlist_location)
-	pbar = tqdm(playlist_obj.videos)
+	pbar = tqdm(playlist_obj.video_urls)
 	print('Download file and convert to mp3 format')
-	for count, video in enumerate(pbar): 
-	# for count, video in enumerate(playlist_obj.videos):
-		r = video.streams.filter(only_audio=True).first()
+	for count, url in enumerate(pbar): 
+		yt = YouTube(url=url, allow_oauth_cache=True, use_oauth=True)
+		r = yt.streams.filter(only_audio=True).first()
 		out_file = r.download(output_path=destination)
 		base, ext = os.path.splitext(out_file)
 		base = base.replace(' ', '_')
